@@ -507,11 +507,15 @@ let mk_function acc f name loc =
   let ff = make_form name f loc ~decl_kind:(E.Dfunction defn) in
   {st_decl=Assume(name, ff, true) ; st_loc=loc} :: acc
 
-let mk_preddef acc f name loc =
+let mk_preddef args acc f name loc =
   let defn = defining_term f in
   let defn = make_term Sy.Map.empty "" defn in
   let ff = make_form name f loc ~decl_kind: (E.Dpredicate defn) in
-  {st_decl=PredDef (ff, name) ; st_loc=loc} :: acc
+  match args with
+  | [] ->
+    {st_decl=PredDef (ff, name) ; st_loc=loc} :: acc
+  | _ ->
+    {st_decl=Assume (name, ff, true) ; st_loc=loc} :: acc
 
 let mk_query acc n f loc sort =
   let ff = make_form "" f loc ~decl_kind:E.Dgoal in
@@ -548,7 +552,7 @@ let make acc d =
   | TRewriting(loc, _, lr) ->
     {st_decl=RwtDef(List.map make_rule lr); st_loc=loc} :: acc
   | TGoal(loc, sort, n, f) -> mk_query acc n f loc sort
-  | TPredicate_def(loc, n, _args, f) -> mk_preddef acc f n loc
+  | TPredicate_def(loc, n, args, f) -> mk_preddef args acc f n loc
   | TFunction_def(loc, n, _args, _rety, f) -> mk_function acc f n loc
   | TTypeDecl _ | TLogic _  -> acc
 

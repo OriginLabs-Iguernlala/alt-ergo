@@ -311,11 +311,31 @@ module Make(X : Theory.S) : S with type tbox = X.t = struct
     let gd, ngd = split_and_filter_insts env insts in
     sort_facts gd, sort_facts ngd
 
+
+  let keep_lemmas lemmas =
+    ME.filter
+      (fun lem _ ->
+         match E.form_view lem with
+         | E.Lemma ({ E.kind = E.Dpredicate _ ; _ }) -> false
+         | E.Lemma _ -> true
+         | _ -> assert false
+      )lemmas
+
+    let keep_predicates lemmas =
+    ME.filter
+      (fun lem _ ->
+         match E.form_view lem with
+         | E.Lemma ({ E.kind = E.Dpredicate _ ; _ }) -> true
+         | E.Lemma _ -> false
+         | _ -> assert false
+      )lemmas
+
   let m_lemmas env tbox selector ilvl mconf =
-    mround env env.lemmas tbox selector ilvl "axioms" mconf
+    mround env (keep_lemmas env.lemmas) tbox selector ilvl "axioms" mconf
 
   let m_predicates env tbox selector ilvl mconf =
-    mround env env.predicates tbox selector ilvl "predicates" mconf
+    assert (ME.is_empty env.predicates);
+    mround env (keep_predicates env.lemmas) tbox selector ilvl "predicates" mconf
 
   let add_lemma env gf dep =
     let { Expr.ff = orig; age = age; _ } = gf in

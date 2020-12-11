@@ -511,7 +511,8 @@ let mk_preddef acc f name loc =
   let defn = defining_term f in
   let defn = make_term Sy.Map.empty "" defn in
   let ff = make_form name f loc ~decl_kind: (E.Dpredicate defn) in
-  {st_decl=PredDef (ff, name) ; st_loc=loc} :: acc
+  (*{st_decl=PredDef (ff, name) ; st_loc=loc} :: acc*)
+  {st_decl=Assume (name, ff, true) ; st_loc=loc} :: acc
 
 let mk_query acc n f loc sort =
   let ff = make_form "" f loc ~decl_kind:E.Dgoal in

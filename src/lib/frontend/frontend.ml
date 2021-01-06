@@ -233,7 +233,14 @@ module Make(SAT : Sat_solver_sig.S) : S with type sat_env = SAT.t = struct
       print_status (Inconsistent d) (Steps.get_steps ());
       env , false, dep
     | SAT.I_dont_know t ->
-      print_status (Unknown (d, t)) (Steps.get_steps ());
+      let stt =
+        if (Options.get_has_quantifiers()) || not (get_interpretation ()) then
+          (* should rather check that we got the model for sure *)
+          (Unknown (d, t))
+        else
+          (Sat (d, t))
+      in
+      print_status stt (Steps.get_steps ());
       if get_model () then SAT.print_model ~header:true (get_fmt_mdl ()) t;
       env , consistent, dep
     | Util.Timeout as e ->

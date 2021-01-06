@@ -38,7 +38,7 @@ let fmt_std = std_fmt
 let fmt_err = err_fmt
 let fmt_wrn = err_fmt
 let fmt_dbg = err_fmt
-let fmt_mdl = std_fmt
+let fmt_mdl = err_fmt
 let fmt_usc = std_fmt
 
 let get_fmt_std () = !fmt_std
@@ -54,7 +54,6 @@ let set_fmt_wrn f = fmt_wrn := f
 let set_fmt_dbg f = fmt_dbg := f
 let set_fmt_mdl f = fmt_mdl := f
 let set_fmt_usc f = fmt_usc := f
-
 
 (* Declaration of all the options as refs with default values *)
 
@@ -118,6 +117,7 @@ let debug_unsat_core = ref false
 let debug_use = ref false
 let debug_warnings = ref false
 let rule = ref (-1)
+let has_quantifiers = ref false
 
 let set_debug b = debug := b
 let set_debug_ac b = debug_ac := b
@@ -146,6 +146,7 @@ let set_debug_unsat_core b = debug_unsat_core := b
 let set_debug_use b = debug_use := b
 let set_debug_warnings b = debug_warnings := b
 let set_rule b = rule := b
+let set_has_quantifiers b = has_quantifiers := b
 
 let get_debug () = !debug
 let get_debug_ac () = !debug_ac
@@ -174,6 +175,7 @@ let get_debug_unsat_core () = !debug_unsat_core
 let get_debug_use () = !debug_use
 let get_debug_warnings () = !debug_warnings
 let get_rule () = !rule
+let get_has_quantifiers () = !has_quantifiers
 
 (** Case split options *)
 

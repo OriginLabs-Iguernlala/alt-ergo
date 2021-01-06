@@ -432,6 +432,8 @@ val set_session_file : string -> unit
 (** Set [used_context_file] accessible with {!val:get_used_context_file} *)
 val set_used_context_file : string -> unit
 
+val set_has_quantifiers : bool -> unit
+
 (** {2 Getter functions} *)
 
 (** {3 Getters for debug flags} *)
@@ -999,6 +1001,8 @@ val get_session_file : unit -> string
 (** Value specifying the base name of the file (with no extension) *)
 val get_used_context_file : unit -> string
 (** Default to [false] *)
+
+val get_has_quantifiers : unit -> bool
 
 
 

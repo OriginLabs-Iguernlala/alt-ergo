@@ -921,6 +921,8 @@ let not_an_app e =
 let mk_forall_ter =
   let env = F_Htbl.create 101 in
   fun new_q _id ->
+    Options.set_has_quantifiers true;
+
     let { name; main = f; _ } = new_q in
     (* when calling mk_forall_ter, binders should not contains
        ununsed binders. Eventual simplification is done in
@@ -1273,6 +1275,7 @@ and mk_let_aux ({ let_v; let_e; in_e; _ } as x) =
   with Not_found -> in_e (* let_v does not appear in in_e *)
 
 and mk_forall_bis (q : quantified) id =
+  Options.set_has_quantifiers true;
   let binders =  (* ignore binders that are not used in f *)
     SMap.filter (fun sy _ -> SMap.mem sy q.main.vars) q.binders
   in
@@ -2216,6 +2219,7 @@ end
 let make_triggers = Triggers.make
 
 let mk_forall name loc binders trs f id ~toplevel ~decl_kind =
+  Options.set_has_quantifiers true;
   let decl_kind =
     if toplevel then decl_kind
     else match decl_kind with
@@ -2240,6 +2244,7 @@ let mk_forall name loc binders trs f id ~toplevel ~decl_kind =
      user_trs = trs; main = f; sko_v; sko_vty; kind = decl_kind} id
 
 let mk_exists name loc binders trs f id ~toplevel ~decl_kind =
+  Options.set_has_quantifiers true;
   if not toplevel || Ty.Svty.is_empty f.vty then
     neg (mk_forall name loc binders trs (neg f) id ~toplevel ~decl_kind)
   else
